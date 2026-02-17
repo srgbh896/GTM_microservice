@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <!-- Suppress specific NuGet and analyzer warnings that are known or handled centrally -->
+    <NoWarn>$(NoWarn);NU1902;NU1510;ASPDEPR004;S1481;SA1210;IDE0290</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" />
+  </ItemGroup>
+</Project>

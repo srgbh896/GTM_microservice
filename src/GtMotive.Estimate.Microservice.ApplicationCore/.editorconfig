@@ -1,0 +1,7 @@
+[*.{cs,vb}]
+
+dotnet_diagnostic.SA1600.severity = error
+dotnet_diagnostic.SA1601.severity = error
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = none

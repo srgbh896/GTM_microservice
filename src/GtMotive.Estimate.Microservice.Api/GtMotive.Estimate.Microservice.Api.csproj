@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <NoWarn>1701;1702;1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="16.0.0" />
+        <PackageReference Include="MediatR" Version="14.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\GtMotive.Estimate.Microservice.ApplicationCore\GtMotive.Estimate.Microservice.ApplicationCore.csproj" />
+        <ProjectReference Include="..\GtMotive.Estimate.Microservice.Infrastructure\GtMotive.Estimate.Microservice.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="SonarAnalyzer.CSharp" Version="10.19.0.132793">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+</Project>
