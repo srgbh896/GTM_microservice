@@ -17,3 +17,4 @@ using System.Diagnostics.CodeAnalysis;
     Justification = "<pendiente>",
     Scope = "namespace",
     Target = "~N:GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure")]
+[assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "<pendiente>", Scope = "type", Target = "~T:GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure.CompositionRootTestFixtureWithTestcontainers")]

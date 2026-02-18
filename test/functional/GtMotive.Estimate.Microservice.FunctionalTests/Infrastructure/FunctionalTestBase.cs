@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure;
 
+[SuppressMessage("Design", "CA1515:Consider making public types internal")] ////TOO: Review
 [Collection(TestCollections.Functional)]
-internal abstract class FunctionalTestBase(CompositionRootTestFixture fixture) : IAsyncLifetime
+public abstract class FunctionalTestBase(CompositionRootTestFixture fixture) : IAsyncLifetime
 {
     public const int QueueWaitingTimeInMilliseconds = 1000;
 

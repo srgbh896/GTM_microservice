@@ -23,6 +23,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
         <PackageReference Include="Respawn" Version="7.0.0" />
+        <PackageReference Include="Testcontainers.MongoDb" Version="4.10.0" />
     </ItemGroup>
 
     <ItemGroup>

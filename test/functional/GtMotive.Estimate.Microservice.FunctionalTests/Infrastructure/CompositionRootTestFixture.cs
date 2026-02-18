@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Api;
 using GtMotive.Estimate.Microservice.Infrastructure;
@@ -12,7 +13,8 @@ using Xunit;
 
 namespace GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure;
 
-internal sealed class CompositionRootTestFixture : IDisposable, IAsyncLifetime
+[SuppressMessage("Design", "CA1515:Consider making public types internal")] ////Tod: Review
+public sealed class CompositionRootTestFixture : IDisposable, IAsyncLifetime
 {
     private readonly ServiceProvider _serviceProvider;
 
@@ -25,8 +27,8 @@ internal sealed class CompositionRootTestFixture : IDisposable, IAsyncLifetime
 
         var services = new ServiceCollection();
         Configuration = configuration;
-        ConfigureServices(services);
         services.AddSingleton<IConfiguration>(configuration);
+        ConfigureServices(services, configuration);
         _serviceProvider = services.BuildServiceProvider();
     }
 
@@ -84,15 +86,32 @@ internal sealed class CompositionRootTestFixture : IDisposable, IAsyncLifetime
         await handlerAction.Invoke(handler);
     }
 
+    public async Task UsingMediator(Func<IMediator, Task> mediatorAction)
+    {
+        ArgumentNullException.ThrowIfNull(mediatorAction);
+
+        using var scope = _serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+        if (mediator == null)
+        {
+            Debug.Fail("The mediator has not been registered");
+        }
+
+        await mediatorAction.Invoke(mediator);
+    }
+
     public void Dispose()
     {
         _serviceProvider.Dispose();
     }
 
-    private static void ConfigureServices(IServiceCollection services)
+    private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddApiDependencies();
         services.AddLogging();
-        services.AddBaseInfrastructure(true, null);
+        services.AddBaseInfrastructure(true, configuration);
     }
 }
+
+
