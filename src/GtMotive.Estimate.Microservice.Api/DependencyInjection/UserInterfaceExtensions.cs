@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GtMotive.Estimate.Microservice.Api.Presenters.Vehicles;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace GtMotive.Estimate.Microservice.Api.DependencyInjection
+namespace GtMotive.Estimate.Microservice.Api.DependencyInjection;
+
+public static class UserInterfaceExtensions
 {
-    public static class UserInterfaceExtensions
+    public static IServiceCollection AddPresenters(this IServiceCollection services)
     {
-        public static IServiceCollection AddPresenters(this IServiceCollection services)
-        {
-            return services;
-        }
+        services.AddScoped<GetAllVehiclesPresenter>();
+        return services;
     }
 }

@@ -2,10 +2,20 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace GtMotive.Estimate.Microservice.Infrastructure.MongoDb
+namespace GtMotive.Estimate.Microservice.Infrastructure.MongoDb;
+
+public class MongoService
 {
-    public class MongoService(IOptions<MongoDbSettings> options)
+    private readonly MongoDbSettings _settings;
+
+    public MongoClient MongoClient { get; }
+    public IMongoDatabase Database { get; }
+
+    public MongoService(IOptions<MongoDbSettings> options)
     {
-        public MongoClient MongoClient { get; } = new MongoClient(options.Value.ConnectionString);
+        _settings = options.Value;
+
+        MongoClient = new MongoClient(_settings.ConnectionString);
+        Database = MongoClient.GetDatabase(_settings.MongoDbDatabaseName);
     }
 }

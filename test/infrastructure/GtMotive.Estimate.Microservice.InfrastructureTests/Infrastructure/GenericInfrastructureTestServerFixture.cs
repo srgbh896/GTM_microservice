@@ -8,33 +8,32 @@ using Microsoft.Extensions.Hosting;
 
 [assembly: CLSCompliant(false)]
 
-namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
+namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure;
+
+internal sealed class GenericInfrastructureTestServerFixture : IDisposable
 {
-    internal sealed class GenericInfrastructureTestServerFixture : IDisposable
+    public TestServer Server { get; set; }
+
+    public async Task InitializeAsync()
     {
-        public TestServer Server { get; set; }
+        using var host = new HostBuilder()
+            .ConfigureWebHost(webHostBuilder =>
+            {
+                webHostBuilder
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseEnvironment("IntegrationTest")
+                    .UseDefaultServiceProvider(options => { options.ValidateScopes = true; })
+                    .ConfigureAppConfiguration((context, builder) => { builder.AddEnvironmentVariables(); })
+                    .UseStartup<Startup>();
+            })
+            .Build();
+        await host.StartAsync();
+        Server = host.GetTestServer();
+    }
 
-        public async Task InitializeAsync()
-        {
-            using var host = new HostBuilder()
-                .ConfigureWebHost(webHostBuilder =>
-                {
-                    webHostBuilder
-                        .UseContentRoot(Directory.GetCurrentDirectory())
-                        .UseEnvironment("IntegrationTest")
-                        .UseDefaultServiceProvider(options => { options.ValidateScopes = true; })
-                        .ConfigureAppConfiguration((context, builder) => { builder.AddEnvironmentVariables(); })
-                        .UseStartup<Startup>();
-                })
-                .Build();
-            await host.StartAsync();
-            Server = host.GetTestServer();
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Server?.Dispose();
-        }
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Server?.Dispose();
     }
 }

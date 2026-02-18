@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.UseCase;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
@@ -19,6 +20,11 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore
         /// <returns>The modified instance.</returns>
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
+            services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(ApplicationConfiguration).Assembly));
+
+            // Register vehicle use cases
+            services.AddScoped<GetAllVehiclesUseCase, GetAllVehiclesUseCase>();
+
             return services;
         }
     }

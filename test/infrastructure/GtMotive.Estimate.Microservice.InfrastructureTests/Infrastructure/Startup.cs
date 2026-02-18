@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 using Acheve.AspNetCore.TestHost.Security;
 using Acheve.TestHost;
 using GtMotive.Estimate.Microservice.Api;
@@ -8,41 +9,40 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
+namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure;
+
+internal sealed class Startup(IWebHostEnvironment environment, IConfiguration configuration)
 {
-    internal sealed class Startup(IWebHostEnvironment environment, IConfiguration configuration)
+    public IWebHostEnvironment Environment { get; } = environment;
+
+    public IConfiguration Configuration { get; } = configuration;
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public static void Configure(IApplicationBuilder app)
     {
-        public IWebHostEnvironment Environment { get; } = environment;
+        app.UseRouting();
 
-        public IConfiguration Configuration { get; } = configuration;
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app)
+        app.UseEndpoints(endpoints =>
         {
-            app.UseRouting();
+            endpoints.MapControllers();
+        });
+    }
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public static async Task ConfigureServices(IServiceCollection services)
+    {
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).GetTypeInfo().Assembly));
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+        services.AddAuthentication(TestServerDefaults.AuthenticationScheme)
+            .AddTestServer();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public static void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).GetTypeInfo().Assembly));
+        services.AddControllers(ApiConfiguration.ConfigureControllers)
+            .WithApiControllers();
 
-            services.AddAuthentication(TestServerDefaults.AuthenticationScheme)
-                .AddTestServer();
-
-            services.AddControllers(ApiConfiguration.ConfigureControllers)
-                .WithApiControllers();
-
-            services.AddBaseInfrastructure(true);
-        }
+        services.AddBaseInfrastructure(true, null);
     }
 }

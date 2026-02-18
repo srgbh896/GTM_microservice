@@ -4,7 +4,11 @@ using System.Reflection;
 using GtMotive.Estimate.Microservice.Api.Authorization;
 using GtMotive.Estimate.Microservice.Api.DependencyInjection;
 using GtMotive.Estimate.Microservice.Api.Filters;
+using GtMotive.Estimate.Microservice.Api.Presenters.Vehicles;
+using GtMotive.Estimate.Microservice.Api.UseCases;
 using GtMotive.Estimate.Microservice.ApplicationCore;
+using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +43,8 @@ namespace GtMotive.Estimate.Microservice.Api
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApiConfiguration).GetTypeInfo().Assembly));
             services.AddUseCases();
             services.AddPresenters();
+            services.AddSingleton<GetAllVehiclesPresenter>();
+            services.AddSingleton<IOutputPortStandard<GetAllVehiclesOutputDto>>(sp => sp.GetRequiredService<GetAllVehiclesPresenter>());
         }
     }
 }
