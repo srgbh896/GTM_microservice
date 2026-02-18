@@ -23,12 +23,12 @@ public sealed class GetAllVehiclesFunctionalTest(CompositionRootTestFixture fixt
     {
         // Arrange
         var request = new GetAllVehiclesRequest();
-
         // Act
         IWebApiPresenter presenter = null;
-        await Fixture.UsingMediator(async mediator =>
+
+        await Fixture.UsingHandlerForRequestResponse<GetAllVehiclesRequest, IWebApiPresenter>(async handler =>
         {
-            presenter = await mediator.Send(request);
+            presenter = await handler.Handle(request, default);
         });
 
         // Assert

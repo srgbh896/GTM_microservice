@@ -86,11 +86,10 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
 
         // Act
         IWebApiPresenter presenter = null;
-        await _fixture.UsingMediator(async mediator =>
+        await _fixture.UsingHandlerForRequestResponse<GetAllVehiclesRequest, IWebApiPresenter>(async handler =>
         {
-            presenter = await mediator.Send(request);
+            presenter = await handler.Handle(request, default);
         });
-
         // Assert
         Assert.NotNull(presenter);
         Assert.NotNull(presenter.ActionResult);
@@ -122,9 +121,9 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
 
         // Act
         IWebApiPresenter presenter = null;
-        await _fixture.UsingMediator(async mediator =>
+        await _fixture.UsingHandlerForRequestResponse<GetAllVehiclesRequest, IWebApiPresenter>(async handler =>
         {
-            presenter = await mediator.Send(request);
+            presenter = await handler.Handle(request, default);
         });
 
         // Assert

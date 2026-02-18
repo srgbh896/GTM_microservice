@@ -171,15 +171,6 @@ public sealed class CompositionRootTestFixtureWithTestcontainers : IDisposable, 
         await handlerAction.Invoke(handler);
     }
 
-    public async Task UsingMediator(Func<IMediator, Task> mediatorAction)
-    {
-        ArgumentNullException.ThrowIfNull(mediatorAction);
-
-        using var scope = _serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>() ?? throw new InvalidOperationException("The mediator has not been registered");
-        await mediatorAction.Invoke(mediator);
-    }
-
     public void Dispose()
     {
         _serviceProvider?.Dispose();

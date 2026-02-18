@@ -86,21 +86,6 @@ public sealed class CompositionRootTestFixture : IDisposable, IAsyncLifetime
         await handlerAction.Invoke(handler);
     }
 
-    public async Task UsingMediator(Func<IMediator, Task> mediatorAction)
-    {
-        ArgumentNullException.ThrowIfNull(mediatorAction);
-
-        using var scope = _serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-        if (mediator == null)
-        {
-            Debug.Fail("The mediator has not been registered");
-        }
-
-        await mediatorAction.Invoke(mediator);
-    }
-
     public void Dispose()
     {
         _serviceProvider.Dispose();
