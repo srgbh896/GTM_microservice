@@ -1,4 +1,5 @@
-﻿using GtMotive.Estimate.Microservice.Api.UseCases;
+﻿using System;
+using GtMotive.Estimate.Microservice.Api.UseCases;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,8 @@ public sealed class GetAllVehiclesPresenter : IWebApiPresenter, IOutputPortStand
     /// <param name="response">The output from the GetAllVehicles use case.</param>
     public void StandardHandle(GetAllVehiclesOutputDto response)
     {
+        ArgumentNullException.ThrowIfNull(response);
+
         var _vehicles = response.Vehicles;
         ActionResult = new OkObjectResult(_vehicles);
     }

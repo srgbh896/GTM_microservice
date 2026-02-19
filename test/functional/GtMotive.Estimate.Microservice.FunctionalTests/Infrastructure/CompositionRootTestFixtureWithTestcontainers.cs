@@ -40,7 +40,7 @@ public sealed class CompositionRootTestFixtureWithTestcontainers : IDisposable, 
 
     public IConfiguration Configuration { get; private set; }
 
-    public async Task SeedDatabaseAsync<T>(IEnumerable<T> data, string collectionName, bool clear = false) where T : IDocument
+    public async Task SeedDatabaseAsync<T>(IEnumerable<T> data, string collectionName, bool clear = false) where T : BaseDocument
     {
         using var client = new MongoClient(mongoConnectionString);
         var database = client.GetDatabase(BbddName);

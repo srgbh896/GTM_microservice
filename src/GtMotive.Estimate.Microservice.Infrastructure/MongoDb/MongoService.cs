@@ -4,18 +4,30 @@ using MongoDB.Driver;
 
 namespace GtMotive.Estimate.Microservice.Infrastructure.MongoDb;
 
+/// <summary>
+/// Servicio de MongoDB que proporciona acceso al cliente y base de datos de MongoDB.
+/// </summary>
 public class MongoService
 {
-    private readonly MongoDbSettings _settings;
-
+    /// <summary>
+    /// Obtiene el cliente de MongoDB configurado.
+    /// </summary>
     public MongoClient MongoClient { get; }
+
+    /// <summary>
+    /// Obtiene la instancia de la base de datos de MongoDB.
+    /// </summary>
     public IMongoDatabase Database { get; }
 
+    /// <summary>
+    /// Inicializa una nueva instancia de la clase <see cref="MongoService"/>.
+    /// </summary>
+    /// <param name="options">Las opciones de configuración de MongoDB.</param>
     public MongoService(IOptions<MongoDbSettings> options)
     {
-        _settings = options.Value;
+        var settings = options.Value;
 
-        MongoClient = new MongoClient(_settings.ConnectionString);
-        Database = MongoClient.GetDatabase(_settings.MongoDbDatabaseName);
+        MongoClient = new MongoClient(settings.ConnectionString);
+        Database = MongoClient.GetDatabase(settings.MongoDbDatabaseName);
     }
 }

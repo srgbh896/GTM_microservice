@@ -24,6 +24,9 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             bool isDevelopment,
             IConfiguration configuration)
         {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(configuration);
+
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
             if (!isDevelopment)

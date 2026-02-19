@@ -14,6 +14,13 @@ public sealed class GetAllVehiclesUseCase : IUseCase<GetAllVehiclesInputDto>
     private readonly IVehicleRepository _vehicleRepository;
     private readonly IOutputPortStandard<GetAllVehiclesOutputDto> _outputPort;
 
+    /// <summary>
+    /// Initializes a new instance of the GetAllVehiclesUseCase class, which coordinates the retrieval of all vehicle
+    /// records using the specified repository and output port.
+    /// </summary>
+    /// <param name="vehicleRepository">The repository used to access vehicle data. This parameter must not be null and should implement the
+    /// IVehicleRepository interface.</param>
+    /// <param name="outputPort">The output port.</param>
     public GetAllVehiclesUseCase(
         IVehicleRepository vehicleRepository,
         IOutputPortStandard<GetAllVehiclesOutputDto> outputPort)

@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces.Base;
+﻿using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces.Base;
 using GtMotive.Estimate.Microservice.Domain.Entities;
 
 namespace GtMotive.Estimate.Microservice.ApplicationCore.Interfaces;
 
+/// <summary>
+/// Defines the contract for a repository that manages vehicle entities.
+/// </summary>
+/// <remarks>This interface extends the base repository interface, providing methods for data access and
+/// manipulation specific to vehicle entities. Implementations of this interface should ensure thread safety and handle
+/// any data persistence concerns appropriately.</remarks>
 public interface IVehicleRepository : IBaseRepository<Vehicle>
 {
 }
