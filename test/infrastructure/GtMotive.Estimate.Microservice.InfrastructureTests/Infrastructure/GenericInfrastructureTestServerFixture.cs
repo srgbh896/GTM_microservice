@@ -10,16 +10,19 @@ using Microsoft.Extensions.Hosting;
 
 namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure;
 
-internal sealed class GenericInfrastructureTestServerFixture : IDisposable
+#pragma warning disable CA1515 // Considere la posibilidad de hacer que los tipos públicos sean internos
+public sealed class GenericInfrastructureTestServerFixture : IDisposable
+#pragma warning restore CA1515 // Considere la posibilidad de hacer que los tipos públicos sean internos
 {
     public TestServer Server { get; set; }
 
     public async Task InitializeAsync()
     {
-        using var host = new HostBuilder()
+        var host = new HostBuilder()
             .ConfigureWebHost(webHostBuilder =>
             {
                 webHostBuilder
+                    .UseTestServer()
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseEnvironment("IntegrationTest")
                     .UseDefaultServiceProvider(options => { options.ValidateScopes = true; })

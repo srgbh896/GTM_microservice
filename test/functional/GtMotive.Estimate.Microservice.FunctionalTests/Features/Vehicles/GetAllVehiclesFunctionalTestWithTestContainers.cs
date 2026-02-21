@@ -7,6 +7,7 @@ using GtMotive.Estimate.Microservice.Api.Features.Vehicles.GetAllVehicles;
 using GtMotive.Estimate.Microservice.Api.UseCases;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
 using GtMotive.Estimate.Microservice.Domain.Entities;
+using GtMotive.Estimate.Microservice.Domain.Entities.ValueObj;
 using GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -64,7 +65,7 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
             {
                 Brand = "Toyota",
                 Model = "Corolla",
-                LicensePlate = "TEST001",
+                LicensePlate = Plate.Create("test002"),
                 ManufacturingDate = DateTime.UtcNow.AddYears(-2),
                 IsRented = false
             },
@@ -72,7 +73,7 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
             {
                 Brand = "Honda",
                 Model = "Civic",
-                LicensePlate = "TEST002",
+                LicensePlate = Plate.Create("test001"),
                 ManufacturingDate = DateTime.UtcNow.AddYears(-1),
                 IsRented = true,
                 RentalStartDate = DateTime.UtcNow.AddDays(-5)

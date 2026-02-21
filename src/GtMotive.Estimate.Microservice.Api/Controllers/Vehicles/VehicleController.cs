@@ -19,16 +19,16 @@ public class VehicleController(IMediator mediator) : ControllerBase
         return presenter.ActionResult;
     }
 
-    /////// <summary>
-    /////// Crear un nuevo vehículo en la flota.
-    /////// Restricción: No se permiten vehículos con más de 5 años desde su fecha de fabricación.
-    /////// </summary>
-    ////[HttpPost]
-    ////public async Task<IActionResult> CreateVehicle([FromBody] CreateVehicleCommand command)
-    ////{
-    ////    var result = await mediator.Send(command);
-    ////    return CreatedAtAction(nameof(GetAvailableVehicles), new { id = result.Id }, result);
-    ////}
+    /// <summary>
+    /// Crear un nuevo vehículo en la flota.
+    /// Restricción: No se permiten vehículos con más de 5 años desde su fecha de fabricación.
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> CreateVehicle([FromBody] CreateVehicleCommand command)
+    {
+        var presenter = await mediator.Send(command);
+        return presenter.ActionResult;
+    }
 
 
     /////// <summary>

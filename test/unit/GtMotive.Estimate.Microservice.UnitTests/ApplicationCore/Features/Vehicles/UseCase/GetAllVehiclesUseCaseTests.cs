@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.UseCase;
 using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces;
+using GtMotive.Estimate.Microservice.ApplicationCore.Profiles;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using GtMotive.Estimate.Microservice.Domain.Entities;
+using GtMotive.Estimate.Microservice.Domain.Entities.ValueObj;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -30,7 +34,13 @@ public sealed class GetAllVehiclesUseCaseTests
     {
         _mockVehicleRepository = new Mock<IVehicleRepository>();
         _mockOutputPort = new Mock<IOutputPortStandard<GetAllVehiclesOutputDto>>();
-        _useCase = new GetAllVehiclesUseCase(_mockVehicleRepository.Object, _mockOutputPort.Object);
+        using var loggerFactory = LoggerFactory.Create(builder => builder.AddDebug());
+
+        var profile = new VehicleProfile();
+        var configuration = new MapperConfiguration(cfg => { cfg.AddProfile(profile); }, loggerFactory);
+        var mapper = new Mapper(configuration);
+        _useCase = new GetAllVehiclesUseCase(_mockVehicleRepository.Object, _mockOutputPort.Object, mapper);
+
     }
 
     /// <summary>
@@ -47,7 +57,7 @@ public sealed class GetAllVehiclesUseCaseTests
             {
                 Brand = "Toyota",
                 Model = "Corolla",
-                LicensePlate = "ABC123",
+                LicensePlate = Plate.Create("test"),
                 ManufacturingDate = DateTime.UtcNow.AddYears(-2),
                 IsRented = false
             },
@@ -55,7 +65,7 @@ public sealed class GetAllVehiclesUseCaseTests
             {
                 Brand = "Honda",
                 Model = "Civic",
-                LicensePlate = "XYZ789",
+                LicensePlate = Plate.Create("tes3t"),
                 ManufacturingDate = DateTime.UtcNow.AddYears(-1),
                 IsRented = true,
                 CurrentCustomerId = Guid.NewGuid(),
@@ -76,8 +86,8 @@ public sealed class GetAllVehiclesUseCaseTests
 
         _mockOutputPort.Verify(x => x.StandardHandle(It.Is<GetAllVehiclesOutputDto>(dto =>
             dto.Vehicles.Count() == 2 &&
-            dto.Vehicles.Any(v => v.Brand == "Toyota" && v.Model == "Corolla" && v.LicensePlate == "ABC123" && !v.IsRented) &&
-            dto.Vehicles.Any(v => v.Brand == "Honda" && v.Model == "Civic" && v.LicensePlate == "XYZ789" && v.IsRented)
+            dto.Vehicles.Any(v => v.Brand == "Toyota" && v.Model == "Corolla" && !v.IsRented) &&
+            dto.Vehicles.Any(v => v.Brand == "Honda" && v.Model == "Civic" && v.IsRented)
         )), Times.Once);
         _mockVehicleRepository.Verify(x => x.GetAllAsync(), Times.Once);
         _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<GetAllVehiclesOutputDto>()), Times.Once);
@@ -126,7 +136,7 @@ public sealed class GetAllVehiclesUseCaseTests
         {
             Brand = "BMW",
             Model = "X5",
-            LicensePlate = "LUX999",
+            LicensePlate = Plate.Create("1231ds"),
             ManufacturingDate = manufacturingDate,
             IsRented = true,
             CurrentCustomerId = currentCustomerId,
@@ -146,7 +156,6 @@ public sealed class GetAllVehiclesUseCaseTests
             dto.Vehicles.Count() == 1 &&
             dto.Vehicles.First().Brand == "BMW" &&
             dto.Vehicles.First().Model == "X5" &&
-            dto.Vehicles.First().LicensePlate == "LUX999" &&
             dto.Vehicles.First().ManufacturingDate == manufacturingDate &&
             dto.Vehicles.First().IsRented
         )), Times.Once);

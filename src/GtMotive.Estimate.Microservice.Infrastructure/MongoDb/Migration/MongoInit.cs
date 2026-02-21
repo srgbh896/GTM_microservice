@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Domain.Entities;
+using GtMotive.Estimate.Microservice.Domain.Entities.ValueObj;
 using MongoDB.Driver;
 
 namespace GtMotive.Estimate.Microservice.Infrastructure.MongoDb.Migration;
@@ -50,7 +51,7 @@ public class MongoInit(MongoService mongoService)
         {
             await collection.InsertManyAsync(
             [
-            new Vehicle(){ IsRented = false, LicensePlate = "Test", Brand = "Toyota", Model = "Test" }
+            new Vehicle(){ IsRented = false, LicensePlate = Plate.Create("4325"), Brand = "Toyota", Model = "Test" }
         ]);
         }
     }

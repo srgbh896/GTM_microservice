@@ -1,5 +1,6 @@
 ﻿using System;
 using GtMotive.Estimate.Microservice.Domain.Base;
+using GtMotive.Estimate.Microservice.Domain.Entities.ValueObj;
 
 namespace GtMotive.Estimate.Microservice.Domain.Entities;
 
@@ -21,7 +22,7 @@ public class Vehicle : BaseDocument
     /// <summary>
     /// Obtiene o establece la matrícula del vehículo.
     /// </summary>
-    public string LicensePlate { get; set; }
+    public Plate LicensePlate { get; set; }
 
     /// <summary>
     /// Obtiene o establece la fecha de fabricación del vehículo.

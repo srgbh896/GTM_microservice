@@ -43,7 +43,9 @@ namespace GtMotive.Estimate.Microservice.Api
             services.AddUseCases();
             services.AddPresenters();
             services.AddSingleton<GetAllVehiclesPresenter>();
+            services.AddSingleton<CreateVehiclePresenter>();
             services.AddSingleton<IOutputPortStandard<GetAllVehiclesOutputDto>>(sp => sp.GetRequiredService<GetAllVehiclesPresenter>());
+            services.AddSingleton<IOutputPortStandard<CreateVehicleOutputDto>>(sp => sp.GetRequiredService<CreateVehiclePresenter>());
         }
     }
 }
