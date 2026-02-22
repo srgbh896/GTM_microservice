@@ -38,7 +38,7 @@ public sealed class GetAllVehiclesFunctionalTest(CompositionRootTestFixture fixt
         var okResult = Assert.IsType<OkObjectResult>(presenter.ActionResult);
         Assert.NotNull(okResult.Value);
 
-        var vehicles = okResult.Value as IEnumerable<VehicleDto>;
+        var vehicles = okResult.Value as IEnumerable<VehicleOutputDto>;
         Assert.NotNull(vehicles);
         Assert.NotEmpty(vehicles);
 

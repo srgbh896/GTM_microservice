@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
+using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto.Base;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.UseCase;
 using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces;
 using GtMotive.Estimate.Microservice.ApplicationCore.Profiles;
@@ -23,7 +24,7 @@ namespace GtMotive.Estimate.Microservice.UnitTests.ApplicationCore.Features.Vehi
 public sealed class GetAllVehiclesUseCaseTests
 {
     private readonly Mock<IVehicleRepository> _mockVehicleRepository;
-    private readonly Mock<IOutputPortStandard<GetAllVehiclesOutputDto>> _mockOutputPort;
+    private readonly Mock<IOutputPortStandard<Result<IEnumerable<VehicleOutputDto>>>> _mockOutputPort;
     private readonly GetAllVehiclesUseCase _useCase;
 
     /// <summary>
@@ -33,7 +34,7 @@ public sealed class GetAllVehiclesUseCaseTests
     public GetAllVehiclesUseCaseTests()
     {
         _mockVehicleRepository = new Mock<IVehicleRepository>();
-        _mockOutputPort = new Mock<IOutputPortStandard<GetAllVehiclesOutputDto>>();
+        _mockOutputPort = new Mock<IOutputPortStandard<Result<IEnumerable<VehicleOutputDto>>>>();
         using var loggerFactory = LoggerFactory.Create(builder => builder.AddDebug());
 
         var profile = new VehicleProfile();
@@ -82,15 +83,15 @@ public sealed class GetAllVehiclesUseCaseTests
         await _useCase.Execute(input);
 
         // Assert
-        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<GetAllVehiclesOutputDto>()), Times.Once);
+        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<Result<IEnumerable<VehicleOutputDto>>>()), Times.Once);
 
-        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<GetAllVehiclesOutputDto>(dto =>
-            dto.Vehicles.Count() == 2 &&
-            dto.Vehicles.Any(v => v.Brand == "Toyota" && v.Model == "Corolla" && !v.IsRented) &&
-            dto.Vehicles.Any(v => v.Brand == "Honda" && v.Model == "Civic" && v.IsRented)
+        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<Result<IEnumerable<VehicleOutputDto>>>(dto =>
+            dto.Value.Count() == 2 &&
+            dto.Value.Any(v => v.Brand == "Toyota" && v.Model == "Corolla" && !v.IsRented) &&
+            dto.Value.Any(v => v.Brand == "Honda" && v.Model == "Civic" && v.IsRented)
         )), Times.Once);
         _mockVehicleRepository.Verify(x => x.GetAllAsync(), Times.Once);
-        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<GetAllVehiclesOutputDto>()), Times.Once);
+        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<Result<IEnumerable<VehicleOutputDto>>>()), Times.Once);
     }
 
     /// <summary>
@@ -112,11 +113,11 @@ public sealed class GetAllVehiclesUseCaseTests
         await _useCase.Execute(input);
 
         // Assert
-        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<GetAllVehiclesOutputDto>()), Times.Once);
+        _mockOutputPort.Verify(x => x.StandardHandle(It.IsAny<Result<IEnumerable<VehicleOutputDto>>>()), Times.Once);
 
-        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<GetAllVehiclesOutputDto>(dto =>
-            dto.Vehicles != null &&
-            !dto.Vehicles.Any()
+        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<Result<IEnumerable<VehicleOutputDto>>>(dto =>
+            dto.Value != null &&
+            !dto.Value.Any()
         )), Times.Once);
     }
 
@@ -152,12 +153,12 @@ public sealed class GetAllVehiclesUseCaseTests
         await _useCase.Execute(input);
 
         // Assert
-        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<GetAllVehiclesOutputDto>(dto =>
-            dto.Vehicles.Count() == 1 &&
-            dto.Vehicles.First().Brand == "BMW" &&
-            dto.Vehicles.First().Model == "X5" &&
-            dto.Vehicles.First().ManufacturingDate == manufacturingDate &&
-            dto.Vehicles.First().IsRented
+        _mockOutputPort.Verify(x => x.StandardHandle(It.Is<Result<IEnumerable<VehicleOutputDto>>>(dto =>
+            dto.Value.Count() == 1 &&
+            dto.Value.First().Brand == "BMW" &&
+            dto.Value.First().Model == "X5" &&
+            dto.Value.First().ManufacturingDate == manufacturingDate &&
+            dto.Value.First().IsRented
         )), Times.Once);
     }
 }

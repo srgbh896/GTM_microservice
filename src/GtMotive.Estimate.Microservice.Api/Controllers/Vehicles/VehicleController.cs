@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Api.Features.Vehicles.GetAllVehicles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,40 +31,34 @@ public class VehicleController(IMediator mediator) : ControllerBase
         return presenter.ActionResult;
     }
 
+    /// <summary>
+    /// Rent vehicle method
+    /// </summary>
+    /// <param name="vehicleId">vehicle id</param>
+    /// <param name="command">rent command</param>
+    /// <returns></returns>
+    [HttpPost("{vehicleId:guid}/rent")]
+    public async Task<IActionResult> RentVehicle(Guid vehicleId, [FromBody] RentVehicleCommand command)
+    {
+        ArgumentNullException.ThrowIfNull(command);
 
-    /////// <summary>
-    /////// Alquilar un vehículo.
-    /////// Restricción: Una persona no puede tener más de un vehículo alquilado al mismo tiempo.
-    /////// </summary>
-    ////[HttpPost("{vehicleId:guid}/rent")]
-    ////public async Task<IActionResult> RentVehicle(Guid vehicleId, [FromBody] RentVehicleRequest request)
-    ////{
-    ////    var command = new RentVehicleCommand
-    ////    {
-    ////        VehicleId = vehicleId,
-    ////        CustomerId = request.CustomerId,
-    ////        RentalStartDate = request.RentalStartDate
-    ////    };
+        command.VehicleId = vehicleId;
+        var presenter = await mediator.Send(command);
+        return presenter.ActionResult;
+    }
 
-    ////    await mediator.Send(command);
+    /// <summary>
+    /// Devolver un vehículo.
+    /// </summary>
+    [HttpPost("{vehicleId:guid}/return")]
+    public async Task<IActionResult> ReturnVehicle(Guid vehicleId)
+    {
+        var command = new ReturnVehicleCommand
+        {
+            VehicleId = vehicleId,
+        };
 
-    ////    return NoContent();
-    ////}
-
-    /////// <summary>
-    /////// Devolver un vehículo.
-    /////// </summary>
-    ////[HttpPost("{vehicleId:guid}/return")]
-    ////public async Task<IActionResult> ReturnVehicle(Guid vehicleId)
-    ////{
-    ////    var command = new ReturnVehicleCommand
-    ////    {
-    ////        VehicleId = vehicleId,
-    ////        ReturnDate = DateTime.UtcNow
-    ////    };
-
-    ////    await mediator.Send(command);
-
-    ////    return NoContent();
-    ////}
+        var presenter = await mediator.Send(command);
+        return presenter.ActionResult;
+    }
 }

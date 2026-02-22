@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
+using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto.Base;
 using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using GtMotive.Estimate.Microservice.Domain.Entities;
@@ -15,7 +16,7 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.UseCa
 public sealed class CreateVehicleUseCase : IUseCase<CreateVehicleInputDto>
 {
     private readonly IVehicleRepository _vehicleRepository;
-    private readonly IOutputPortStandard<CreateVehicleOutputDto> _outputPort;
+    private readonly IOutputPortStandard<Result<CreateVehicleOutputDto>> _outputPort;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -26,7 +27,7 @@ public sealed class CreateVehicleUseCase : IUseCase<CreateVehicleInputDto>
     /// <param name="mapper">AutoMapper instance to map domain entities to DTOs.</param>
     public CreateVehicleUseCase(
         IVehicleRepository vehicleRepository,
-        IOutputPortStandard<CreateVehicleOutputDto> outputPort,
+        IOutputPortStandard<Result<CreateVehicleOutputDto>> outputPort,
         IMapper mapper)
     {
         _vehicleRepository = vehicleRepository;
@@ -55,6 +56,6 @@ public sealed class CreateVehicleUseCase : IUseCase<CreateVehicleInputDto>
         };
 
         // Send result to output port (presenter)
-        _outputPort.StandardHandle(output);
+        _outputPort.StandardHandle(Result<CreateVehicleOutputDto>.Success(output));
     }
 }

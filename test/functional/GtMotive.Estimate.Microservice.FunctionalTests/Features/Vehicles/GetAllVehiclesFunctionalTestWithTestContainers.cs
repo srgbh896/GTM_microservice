@@ -98,7 +98,7 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
         var okResult = Assert.IsType<OkObjectResult>(presenter.ActionResult);
         Assert.NotNull(okResult.Value);
 
-        var vehicles = okResult.Value as IEnumerable<VehicleDto>;
+        var vehicles = okResult.Value as IEnumerable<VehicleOutputDto>;
         Assert.NotNull(vehicles);
         Assert.NotEmpty(vehicles);
 
@@ -130,7 +130,7 @@ public sealed class GetAllVehiclesFunctionalTestWithTestContainers(CompositionRo
         // Assert
         Assert.NotNull(presenter);
         var okResult = Assert.IsType<OkObjectResult>(presenter.ActionResult);
-        var vehicles = okResult.Value as IEnumerable<VehicleDto>;
+        var vehicles = okResult.Value as IEnumerable<VehicleOutputDto>;
         Assert.NotNull(vehicles);
         Assert.Empty(vehicles); // Should be truly empty now
     }

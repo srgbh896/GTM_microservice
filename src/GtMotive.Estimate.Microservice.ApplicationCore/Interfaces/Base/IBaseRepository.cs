@@ -45,4 +45,10 @@ public interface IBaseRepository<TDocument>
     /// </summary>
     /// <param name="id">El identificador único del documento a eliminar.</param>
     Task DeleteByIdAsync(Guid id);
+
+    /// <summary>
+    /// replaza un documento existente por su identificador. Si el documento no existe, se inserta como nuevo.
+    /// </summary>
+    /// <param name="document"></param>
+    Task ReplaceOneAsync(TDocument document);
 }

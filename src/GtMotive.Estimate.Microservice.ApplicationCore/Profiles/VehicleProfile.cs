@@ -17,6 +17,8 @@ public class VehicleProfile : Profile
     {
         CreateMap<Vehicle, VehicleDto>()
             .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => Plate.Create(src.LicensePlate.ToString())));
+        CreateMap<Vehicle, VehicleOutputDto>()
+            .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => Plate.Create(src.LicensePlate.ToString())));
         CreateMap<CreateVehicleInputDto, Vehicle>()
             .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => Plate.Create(src.LicensePlate)));
     }

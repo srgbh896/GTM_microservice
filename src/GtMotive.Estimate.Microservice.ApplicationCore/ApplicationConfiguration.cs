@@ -6,29 +6,30 @@ using Microsoft.Extensions.DependencyInjection;
 
 [assembly: CLSCompliant(false)]
 
-namespace GtMotive.Estimate.Microservice.ApplicationCore
+namespace GtMotive.Estimate.Microservice.ApplicationCore;
+
+/// <summary>
+/// Adds Use Cases classes.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public static class ApplicationConfiguration
 {
     /// <summary>
-    /// Adds Use Cases classes.
+    /// Adds Use Cases to the ServiceCollection.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public static class ApplicationConfiguration
+    /// <param name="services">Service Collection.</param>
+    /// <returns>The modified instance.</returns>
+    public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-        /// <summary>
-        /// Adds Use Cases to the ServiceCollection.
-        /// </summary>
-        /// <param name="services">Service Collection.</param>
-        /// <returns>The modified instance.</returns>
-        public static IServiceCollection AddUseCases(this IServiceCollection services)
-        {
-            services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(ApplicationConfiguration).Assembly));
+        services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(ApplicationConfiguration).Assembly));
 
-            // Register vehicle use cases
-            services.AddScoped<GetAllVehiclesUseCase>();
-            services.AddScoped<CreateVehicleUseCase>();
-            services.AddAutoMapper(cfg => cfg.AddProfile<VehicleProfile>());
+        // Register vehicle use cases
+        services.AddScoped<GetAllVehiclesUseCase>();
+        services.AddScoped<CreateVehicleUseCase>();
+        services.AddScoped<ReturnVehicleUseCase>();
+        services.AddScoped<RentVehicleUseCase>();
+        services.AddAutoMapper(cfg => cfg.AddProfile<VehicleProfile>());
 
-            return services;
-        }
+        return services;
     }
 }

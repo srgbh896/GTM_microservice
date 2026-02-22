@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
+using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto.Base;
 using GtMotive.Estimate.Microservice.ApplicationCore.Interfaces;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 
@@ -13,7 +14,7 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.UseCa
 public sealed class GetAllVehiclesUseCase : IUseCase<GetAllVehiclesInputDto>
 {
     private readonly IVehicleRepository _vehicleRepository;
-    private readonly IOutputPortStandard<GetAllVehiclesOutputDto> _outputPort;
+    private readonly IOutputPortStandard<Result<IEnumerable<VehicleOutputDto>>> _outputPort;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -26,7 +27,7 @@ public sealed class GetAllVehiclesUseCase : IUseCase<GetAllVehiclesInputDto>
     /// <param name="mapper">The AutoMapper instance.</param>
     public GetAllVehiclesUseCase(
         IVehicleRepository vehicleRepository,
-        IOutputPortStandard<GetAllVehiclesOutputDto> outputPort,
+        IOutputPortStandard<Result<IEnumerable<VehicleOutputDto>>> outputPort,
         IMapper mapper)
     {
         _vehicleRepository = vehicleRepository;
@@ -42,15 +43,9 @@ public sealed class GetAllVehiclesUseCase : IUseCase<GetAllVehiclesInputDto>
     {
         // Retrieve all vehicles from the repository
         var vehicles = await _vehicleRepository.GetAllAsync();
-        var result = _mapper.Map<IEnumerable<VehicleDto>>(vehicles);
-
-        // Create output with the vehicles collection
-        var output = new GetAllVehiclesOutputDto
-        {
-            Vehicles = result
-        };
+        var result = _mapper.Map<IEnumerable<VehicleOutputDto>>(vehicles);
 
         // Write to output port (presenter will format the response)
-        _outputPort.StandardHandle(output);
+        _outputPort.StandardHandle(Result<IEnumerable<VehicleOutputDto>>.Success(result));
     }
 }
