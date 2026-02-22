@@ -1,6 +1,7 @@
 ﻿using System;
 using GtMotive.Estimate.Microservice.Domain.Base;
 using GtMotive.Estimate.Microservice.Domain.Entities.ValueObj;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace GtMotive.Estimate.Microservice.Domain.Entities;
 
@@ -45,4 +46,11 @@ public class Vehicle : BaseDocument
     /// Es nulo si el vehículo no está alquilado.
     /// </summary>
     public DateTime? RentalStartDate { get; set; }
+
+    /// <summary>
+    /// Obtiene un valor que indica si el vehículo está disponible para alquilar.
+    /// </summary>
+    [BsonIgnore]
+    public bool IsAvailable =>
+        !IsRented && ManufacturingDate > DateTime.UtcNow.AddYears(-5);
 }

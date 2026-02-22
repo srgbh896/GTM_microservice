@@ -49,7 +49,7 @@ public sealed class RentVehicleUseCase : IUseCase<RentVehicleInputDto>
             return;
         }
 
-        if (vehicle.IsRented)
+        if (vehicle.IsAvailable)
         {
             _outputPort.StandardHandle(Result.Failure<RentVehicleOutputDto>("Vehicle is not available for rent."));
             return;

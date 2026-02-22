@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GtMotive.Estimate.Microservice.ApplicationCore.Features.Vehicles.Dto;
@@ -45,6 +46,15 @@ public sealed class CreateVehicleUseCase : IUseCase<CreateVehicleInputDto>
 
         var licensePlate = Plate.Create(input.LicensePlate);
         var vehicle = _mapper.Map<Vehicle>(input);
+        var existingPlate = (await _vehicleRepository.FilterByAsync(
+            r => r.LicensePlate == vehicle.LicensePlate))
+            .FirstOrDefault();
+
+        if (existingPlate != null)
+        {
+            _outputPort.StandardHandle(Result.Failure<CreateVehicleOutputDto>("License plate already exists."));
+            return;
+        }
 
         // Persist vehicle to repository
         await _vehicleRepository.InsertOneAsync(vehicle);
